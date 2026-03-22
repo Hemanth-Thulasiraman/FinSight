@@ -1,0 +1,2 @@
+# FinSight
+Financial Research Assistant
