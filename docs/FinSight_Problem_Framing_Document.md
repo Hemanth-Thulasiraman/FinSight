@@ -5,7 +5,7 @@ A financial research analyst begins their day by gathering news articles and sto
 
 **Why an Agent \- Not a Pipeline** 
 
-1. When the agent discovers Elon musk sold his Tesla shares , it must decide to pull Elon musks recent public statements and SEC Form 4 fillings . A pipeline cannot do this because its execution steps are hardcoded at write time \- it will finish its fixed sequence regardless of what it finds mid-run. In financial research this matters because a $3.5B insider sale is a significant signal \- an analyst who doesn't investigate further may miss a major red flag and produce a brief that presents an incomplete or misleading picture to the investor.  
+1. When the agent discovers Elon Musk sold his Tesla shares , it must decide to pull Elon Musk recent public statements and SEC Form 4 fillings . A pipeline cannot do this because its execution steps are hardcoded at write time \- it will finish its fixed sequence regardless of what it finds mid-run. In financial research this matters because a $3.5B insider sale is a significant signal \- an analyst who doesn't investigate further may miss a major red flag and produce a brief that presents an incomplete or misleading picture to the investor.  
 2. When the news search tool returns zero results for a small-cap company, the agent broaden the query to company name, retry with CEO name, then logs a LOW\_COVERAGE flag if still empty. A pipeline cannot do this because it has no mechanism to inspect its own outputs \- it passes an empty result downstream silently without raising an error. In financial research this matters because the LLM receiving empty context will hallucinate news that never happened, and the user has no way of knowing the brief is fabricated.  
 3. Different companies require fundamentally different amounts of research effort. Researching Apple requires few tool calls because there are many news articles from many years. Researching a small-cap biotech may require 10+ tool calls because agent must try multiple sources, retry with different queries, and may still conclude coverage is insufficient. A pipeline cannot handle this because it runs a fixed number of steps regardless of input \- it either over-researches simple companies wasting cost, or under-researches complex ones producing incomplete briefs. In financial research this matters because following a uniform depth approach on variable complexity inputs leads to incorrect results.
 
@@ -30,7 +30,7 @@ A financial research analyst begins their day by gathering news articles and sto
    **API/service used:** FMP API or yfinance  
    **Output format:** JSON for FMP and yfinance gives data frame  
    **What the agent does with the output:** The agent extracts the financial data and stores it in the database.  
-   **What happens if it fails or returns garbage:** Then the agent may change its approach or may indicate that this company has insufficient financial data available.  
+   **What happens if it fails or returns garbage:** logs an INSUFFICIENT_FINANCIAL_DATA flag, proceeds with available data, and notes the gap explicitly in the brief.  
      
 4. **Tool name:** Memory retrieval  
    **What it does:** Helps agents check for past research about a company  
