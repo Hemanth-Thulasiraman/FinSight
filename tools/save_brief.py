@@ -1,5 +1,5 @@
 import os
-import datetime
+from datetime import datetime
 def save_brief(ticker: str, content: str) -> dict:
     try:
         os.makedirs("outputs", exist_ok=True)
