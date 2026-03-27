@@ -5,6 +5,13 @@ from tools.news_search import search_news
 from tools.financial_data import get_financial_data
 from tools.memory_retrieval import retrieve_prior_research
 from tools.save_brief import save_brief
+from db.database import get_connection, release_connection
+from ingestion.db_writer import insert_research_brief, insert_brief_section
+from ingestion.models import ResearchBrief, BriefSection
+from tools.memory_retrieval import get_embedding
+import uuid
+from ingestion.models import RunLog
+from ingestion.db_writer import insert_run_log
 
 client = OpenAI()
 MAX_TOOL_CALLS = 12
@@ -121,10 +128,86 @@ Key Financials:
     }
 
 def save_output(state: AgentState) -> dict:
-    """Save brief to file."""
+    """Save brief to file and persist to PostgreSQL for memory."""
     ticker = state["ticker"]
-    result = save_brief(ticker,state["brief_content"])
-    return {"messages": state["messages"] + [f"Brief saved to {result['file_path']}"]}
+    brief_content = state["brief_content"]
+
+    # Step 0: Insert run_log row to get a run_id
+    conn = get_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            """INSERT INTO run_log (ticker_name, status, number_of_tool_calls)
+               VALUES (%s, %s, %s) RETURNING run_id""",
+            (ticker, "COMPLETED", state["tool_call_count"])
+        )
+        run_id = cursor.fetchone()[0]
+        conn.commit()
+    finally:
+        release_connection(conn)
+
+    # Step 1: Save to file
+    file_result = save_brief(ticker, brief_content)
+    file_path = file_result.get("file_path", "unknown")
+
+    # Step 2: Insert into research_briefs table
+    conn = get_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            """INSERT INTO research_briefs (run_id, ticker_name, s3_path)
+               VALUES (%s, %s, %s) RETURNING brief_id""",
+            (run_id, ticker, file_path)
+        )
+        brief_id = cursor.fetchone()[0]
+        conn.commit()
+    finally:
+        release_connection(conn)
+
+    # Step 3: Split brief into sections and embed each one
+    sections = parse_brief_sections(brief_content)
+    for section_name, section_text in sections.items():
+        embedding = get_embedding(section_text)
+        conn = get_connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute(
+                """INSERT INTO brief_sections
+                   (brief_id, section_name, section_text, embedding)
+                   VALUES (%s, %s, %s, %s::vector)""",
+                (brief_id, section_name, section_text, str(embedding))
+            )
+            conn.commit()
+        finally:
+            release_connection(conn)
+
+    return {
+        "messages": state["messages"] + [
+            f"Brief saved to {file_path}",
+            f"Brief and {len(sections)} sections stored in PostgreSQL"
+        ]
+    }
+
+def parse_brief_sections(brief_content: str) -> dict:
+    """
+    Split the brief into named sections for embedding.
+    Looks for markdown headers like '**1. Company Overview**'
+    """
+    import re
+    sections = {}
+    # Split on numbered headers
+    parts = re.split(r'\*\*\d+\.\s+', brief_content)
+    headers = re.findall(r'\*\*\d+\.\s+(.+?)\*\*', brief_content)
+
+    for i, header in enumerate(headers):
+        if i + 1 < len(parts):
+            sections[header.strip()] = parts[i + 1].strip()
+
+    # If parsing fails, store whole brief as one section
+    if not sections:
+        sections["full_brief"] = brief_content
+
+    return sections
 
 def emergency_stop(state: AgentState) -> dict:
     """Called when tool call limit exceeded or unrecoverable error."""
