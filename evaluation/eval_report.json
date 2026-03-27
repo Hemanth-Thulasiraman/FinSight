@@ -1,0 +1,69 @@
+{
+  "run_date": "2026-03-26T20:48:16.704607",
+  "total_tickers": 4,
+  "completion_rate": 1.0,
+  "avg_quality_score": 1.0,
+  "avg_latency_seconds": 9.41,
+  "results": [
+    {
+      "ticker": "AAPL",
+      "status": "COMPLETED",
+      "latency_seconds": 10.68,
+      "quality_score": 1.0,
+      "word_count": 539,
+      "section_scores": {
+        "has_all_sections": 1.0,
+        "has_financial_figures": 1.0,
+        "has_risk_flags": 1.0,
+        "has_recommendation": 1.0,
+        "adequate_length": 1.0
+      },
+      "timestamp": "2026-03-26T20:47:49.734232"
+    },
+    {
+      "ticker": "NVDA",
+      "status": "COMPLETED",
+      "latency_seconds": 6.61,
+      "quality_score": 1.0,
+      "word_count": 507,
+      "section_scores": {
+        "has_all_sections": 1.0,
+        "has_financial_figures": 1.0,
+        "has_risk_flags": 1.0,
+        "has_recommendation": 1.0,
+        "adequate_length": 1.0
+      },
+      "timestamp": "2026-03-26T20:47:56.347490"
+    },
+    {
+      "ticker": "TSLA",
+      "status": "COMPLETED",
+      "latency_seconds": 10.99,
+      "quality_score": 1.0,
+      "word_count": 586,
+      "section_scores": {
+        "has_all_sections": 1.0,
+        "has_financial_figures": 1.0,
+        "has_risk_flags": 1.0,
+        "has_recommendation": 1.0,
+        "adequate_length": 1.0
+      },
+      "timestamp": "2026-03-26T20:48:07.342244"
+    },
+    {
+      "ticker": "MSFT",
+      "status": "COMPLETED",
+      "latency_seconds": 9.36,
+      "quality_score": 1.0,
+      "word_count": 492,
+      "section_scores": {
+        "has_all_sections": 1.0,
+        "has_financial_figures": 1.0,
+        "has_risk_flags": 1.0,
+        "has_recommendation": 1.0,
+        "adequate_length": 0.984
+      },
+      "timestamp": "2026-03-26T20:48:16.704576"
+    }
+  ]
+}
