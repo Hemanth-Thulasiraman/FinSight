@@ -12,8 +12,11 @@ from tools.memory_retrieval import get_embedding
 import uuid
 from ingestion.models import RunLog
 from ingestion.db_writer import insert_run_log
+from langsmith import traceable
+from langsmith.wrappers import wrap_openai
+from langsmith import traceable
 
-client = OpenAI()
+client = wrap_openai(OpenAI())
 MAX_TOOL_CALLS = 12
 
 def check_memory(state: AgentState) -> dict:
@@ -63,7 +66,7 @@ def get_financials(state: AgentState) -> dict:
         return {"status": "FAILED", "error_message": result["message"]}
     return {"tool_call_count": state["tool_call_count"] + 1,"financial_data" : result,"messages": state["messages"] + [f"Financial data fetched for {ticker}"] }
 
-
+@traceable
 def generate_brief(state: AgentState) -> dict:
     """Generate research brief using GPT-4o."""
     profile = state["company_profile"]
@@ -137,10 +140,10 @@ def save_output(state: AgentState) -> dict:
     try:
         cursor = conn.cursor()
         cursor.execute(
-            """INSERT INTO run_log (ticker_name, status, number_of_tool_calls)
-               VALUES (%s, %s, %s) RETURNING run_id""",
-            (ticker, "COMPLETED", state["tool_call_count"])
-        )
+    """INSERT INTO run_log (ticker_name, status, number_of_tool_calls, cost)
+       VALUES (%s, %s, %s, %s) RETURNING run_id""",
+    (ticker, "COMPLETED", state["tool_call_count"], 0.0)
+)
         run_id = cursor.fetchone()[0]
         conn.commit()
     finally:
