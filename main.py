@@ -101,7 +101,7 @@ async def submit_review(run_id: str, request: ReviewRequest):
         active_runs[run_id]["stage"] = "final_review"
         brief_preview = ""
         if result.get("brief_content"):
-            brief_preview = result["brief_content"][:500] + "..."
+            brief_preview = result["brief_content"] 
         return RunResponse(
             run_id=run_id,
             status="AWAITING_REVIEW",
