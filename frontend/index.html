@@ -447,6 +447,23 @@
     animation: spin 0.8s linear infinite;
   }
 
+  @media print {
+  body::before { display: none; }
+  header, .search-section, .status-bar,
+  .hitl-panel, .history-section, footer,
+  .brief-header { display: none !important; }
+  .brief-content {
+    max-height: none;
+    border: none;
+    padding: 0;
+    font-size: 12px;
+    color: #000;
+    background: #fff;
+  }
+  .brief-content h2 { color: #000; }
+  .brief-content p, .brief-content li { color: #333; }
+}
+
   @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
@@ -499,7 +516,10 @@
   <div class="brief-panel" id="briefPanel">
     <div class="brief-header">
       <div class="brief-label">// research brief</div>
-      <div class="brief-meta" id="briefMeta"></div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="brief-meta" id="briefMeta"></div>
+        <button class="btn btn-secondary" id="downloadBtn" onclick="downloadPDF()" style="display:none;padding:8px 16px;font-size:11px;">⬇ PDF</button>
+      </div>
     </div>
     <div class="brief-content" id="briefContent"></div>
   </div>
@@ -536,6 +556,10 @@
 
   // Render history on load
   renderHistory();
+
+  function downloadPDF() {
+    window.print();
+  }
 
   async function startResearch() {
     const ticker = document.getElementById('tickerInput').value.trim().toUpperCase();
@@ -654,6 +678,7 @@
     document.getElementById('briefMeta').textContent =
       `${currentTicker} · ${new Date().toLocaleDateString()}`;
     show('briefPanel');
+    document.getElementById('downloadBtn').style.display = 'block';
   }
 
   function addToHistory(ticker) {
