@@ -117,3 +117,5 @@ FinSight/
 
 Building FinSight showed me that financial research is a strong use case for agents because the workflow cannot be hardcoded in advance. The depth and direction of research depend on what the system discovers mid-run, so adaptive tool use matters much more than in a traditional pipeline. I also learned that observability, memory, and human review are essential in high-stakes domains, especially when numerical claims need to be trustworthy. Most importantly, a useful agent is not just about generating text — it also needs to justify where its conclusions came from and make that process auditable.
 
+## Live Demo
+API: https://web-production-20cc5.up.railway.app/docs
