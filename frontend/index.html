@@ -449,19 +449,26 @@
 
   @media print {
   body::before { display: none; }
+  body { background: #fff; color: #000; }
   header, .search-section, .status-bar,
   .hitl-panel, .history-section, footer,
   .brief-header { display: none !important; }
+  .brief-panel { display: block !important; }
   .brief-content {
-    max-height: none;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
     border: none;
-    padding: 0;
+    padding: 20px;
     font-size: 12px;
-    color: #000;
-    background: #fff;
+    color: #000 !important;
+    background: #fff !important;
   }
-  .brief-content h2 { color: #000; }
-  .brief-content p, .brief-content li { color: #333; }
+  .brief-content h1, .brief-content h2, .brief-content h3 {
+    color: #000 !important;
+    font-family: Georgia, serif;
+  }
+  .brief-content p, .brief-content li { color: #333 !important; }
 }
 
   @keyframes spin { to { transform: rotate(360deg); } }
@@ -558,9 +565,18 @@
   renderHistory();
 
   function downloadPDF() {
+    const briefContent = document.getElementById('briefContent');
+    const originalMaxHeight = briefContent.style.maxHeight;
+    const originalOverflow = briefContent.style.overflow;
+    
+    briefContent.style.maxHeight = 'none';
+    briefContent.style.overflow = 'visible';
+    
     window.print();
-  }
-
+    
+    briefContent.style.maxHeight = originalMaxHeight;
+    briefContent.style.overflow = originalOverflow;
+}
   async function startResearch() {
     const ticker = document.getElementById('tickerInput').value.trim().toUpperCase();
     if (!ticker) return;
