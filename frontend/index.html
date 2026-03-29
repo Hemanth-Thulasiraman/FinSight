@@ -677,8 +677,9 @@
     briefContent.innerHTML = marked.parse(content);
     document.getElementById('briefMeta').textContent =
       `${currentTicker} · ${new Date().toLocaleDateString()}`;
-    show('briefPanel');
     document.getElementById('downloadBtn').style.display = 'block';
+    show('briefPanel');
+    
   }
 
   function addToHistory(ticker) {
