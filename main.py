@@ -47,7 +47,7 @@ async def start_research(request: ResearchRequest):
     run_id = str(uuid.uuid4())
     config = {"configurable": {"thread_id": run_id}}
     initial_state = {
-    "ticker": ticker.upper(),
+    "ticker": request.ticker.upper(),
     "tool_call_count": 0,
     "status": "RUNNING",
     "messages": [],
