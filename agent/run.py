@@ -9,20 +9,21 @@ def run_agent(ticker: str):
     thread_id = str(uuid.uuid4())
     config = {"configurable": {"thread_id": thread_id}}
 
-    # Initial state
     initial_state = {
-        "ticker": ticker.upper(),
-        "tool_call_count": 0,
-        "status": "RUNNING",
-        "messages": [],
-        "company_profile": None,
-        "news_results": None,
-        "financial_data": None,
-        "prior_research": None,
-        "brief_content": None,
-        "coverage_flag": None,
-        "error_message": None
-    }
+    "ticker": ticker.upper(),
+    "tool_call_count": 0,
+    "status": "RUNNING",
+    "messages": [],
+    "company_profile": None,
+    "news_results": None,
+    "financial_data": None,
+    "prior_research": None,
+    "brief_content": None,
+    "coverage_flag": None,
+    "error_message": None,
+    "tools_called": [],        
+    "next_action": None        
+}
 
     print(f"\nStarting FinSight agent for {ticker.upper()}...")
     print("="*50)

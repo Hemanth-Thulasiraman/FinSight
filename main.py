@@ -47,18 +47,20 @@ async def start_research(request: ResearchRequest):
     run_id = str(uuid.uuid4())
     config = {"configurable": {"thread_id": run_id}}
     initial_state = {
-        "ticker": request.ticker.upper(),
-        "tool_call_count": 0,
-        "status": "RUNNING",
-        "messages": [],
-        "company_profile": None,
-        "news_results": None,
-        "financial_data": None,
-        "prior_research": None,
-        "brief_content": None,
-        "coverage_flag": None,
-        "error_message": None
-    }
+    "ticker": ticker.upper(),
+    "tool_call_count": 0,
+    "status": "RUNNING",
+    "messages": [],
+    "company_profile": None,
+    "news_results": None,
+    "financial_data": None,
+    "prior_research": None,
+    "brief_content": None,
+    "coverage_flag": None,
+    "error_message": None,
+    "tools_called": [],        
+    "next_action": None        
+}
     graph.invoke(initial_state, config)
     active_runs[run_id] = {
         "config": config,

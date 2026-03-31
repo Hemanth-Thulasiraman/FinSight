@@ -1,6 +1,6 @@
 from typing import TypedDict, Optional, List
 
-class AgentState(TypedDict, total=False):
+class AgentState(TypedDict):
     ticker: str  
     company_profile: Optional[dict]
     news_results: Optional[dict]
@@ -12,3 +12,5 @@ class AgentState(TypedDict, total=False):
     status: str
     messages: List[str]
     error_message: Optional[str]
+    tools_called: List[str]      
+    next_action: Optional[str]
