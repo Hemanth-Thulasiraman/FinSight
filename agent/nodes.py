@@ -1,3 +1,4 @@
+#nodes
 from openai import OpenAI
 from agent.state import AgentState
 from tools.company_profile import get_company_profile
