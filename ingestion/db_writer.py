@@ -1,3 +1,4 @@
+#database writer file
 from db.database import get_connection, release_connection
 from ingestion.models import RunLog, NewsArticle, ResearchBrief, BriefSection
 
