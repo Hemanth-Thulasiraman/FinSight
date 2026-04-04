@@ -4,6 +4,7 @@ from agent.react_prompt import build_react_prompt
 from tools.company_profile import get_company_profile
 from tools.news_search import search_news
 from tools.financial_data import get_financial_data
+import numpy as np
 
 client = OpenAI()
 
