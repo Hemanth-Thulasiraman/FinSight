@@ -1,4 +1,4 @@
-# Baseline Evaluation — AAPL Run
+# Baseline Evaluation — AAPL Run (evaluation metrics)
 
 ## What works
 - All 5 tools connected and returning real data
