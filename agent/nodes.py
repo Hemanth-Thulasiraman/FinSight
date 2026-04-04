@@ -10,6 +10,7 @@ from ingestion.db_writer import insert_research_brief, insert_brief_section
 from ingestion.models import ResearchBrief, BriefSection
 from tools.memory_retrieval import get_embedding
 import uuid
+import numpy as np
 from ingestion.models import RunLog
 from ingestion.db_writer import insert_run_log
 from langsmith import traceable
